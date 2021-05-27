@@ -2,3 +2,5 @@
 __pycache__/
 session_file.session
 *.pyc
+*.session-journal
+settings.cfg

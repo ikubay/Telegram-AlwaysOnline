@@ -4,13 +4,25 @@ import logging
 from login import client
 from telethon.tl.functions.account import UpdateStatusRequest
 import time
-from data import delay
+from data import delay_seconds
+import asyncio
 
-if client.is_user_authorized():
-    logging.info("You are now AlwaysOnline™, Yah!")
-    while True:
-        client(UpdateStatusRequest(offline=False))
-        time.sleep(delay)
-        logging.debug("Sleep for 1 min")
-else:
-    logging.fatal("Login Fails, please retry... 失败，请重试！")
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    )
+
+async def update_status():
+    async with client:
+        auth_status = await client.is_user_authorized()
+        if auth_status:
+            logging.info("You are now authorized and will be always online.")
+            while True:
+                await client(UpdateStatusRequest(offline=False))
+                logging.info("Updated online status. Sleeping for " + str(delay_seconds) + " seconds.")
+                time.sleep(delay_seconds)
+        else:
+            logging.fatal("Login Failed, please retry... 失败，请重试！")
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(update_status())
+loop.close()
