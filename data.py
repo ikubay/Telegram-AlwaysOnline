@@ -5,7 +5,7 @@ import logging
 # Change this as desired:
 settings_file = "settings.cfg"
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     )
 

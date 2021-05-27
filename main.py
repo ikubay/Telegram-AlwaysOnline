@@ -7,7 +7,7 @@ import time
 from data import delay_seconds
 import asyncio
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     )
 
@@ -17,8 +17,12 @@ async def update_status():
         if auth_status:
             logging.info("You are now authorized and will be always online.")
             while True:
-                await client(UpdateStatusRequest(offline=False))
-                logging.info("Updated online status. Sleeping for " + str(delay_seconds) + " seconds.")
+                try:
+                    await client(UpdateStatusRequest(offline=False))
+                    logging.info("Updated online status successfully.")
+                except Exception as e:
+                    logging.error("Could not update online status: " + str(e))
+                logging.info("Sleeping for " + str(delay_seconds) + " seconds.")
                 time.sleep(delay_seconds)
         else:
             logging.fatal("Login Failed, please retry... 失败，请重试！")
