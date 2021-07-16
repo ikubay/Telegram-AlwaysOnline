@@ -11,10 +11,12 @@ logging.basicConfig(level=logging.INFO,
                     )
 
 if api_id == '' or api_hash == '':
-    logging.fatal("You must assign a API before using this script! 在登录前你必须给定ID和HASH @ data.py")
+    logging.fatal("You must assign API credentials before using this script! Check settings.cfg")
 
-logging.info("Trying to Login to Telegram... 正在尝试登录...")
-client = TelegramClient('session_file', api_id, api_hash)
+logging.info("Trying to Login to Telegram...")
+# Don't need to set request_retries=None, just connection_retries=None
+# https://docs.telethon.dev/en/latest/modules/client.html
+client = TelegramClient(session="session_file", api_id=api_id, api_hash=api_hash, connection_retries=None)
 
 async def auth_client():
     async with client:
